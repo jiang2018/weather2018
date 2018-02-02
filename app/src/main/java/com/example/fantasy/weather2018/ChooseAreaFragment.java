@@ -66,7 +66,7 @@ public class ChooseAreaFragment extends Fragment {
         adapter =new ArrayAdapter<>(getContext(),android.R.layout.simple_list_item_1,dataList);
         ////构建适配器 对象    该子项布局用于显示一段文本
         listView.setAdapter(adapter);
-        Log.d(TAG, "碎片初始化  "+Thread.currentThread().getName());
+       // Log.d(TAG, "碎片初始化  "+Thread.currentThread().getName());
         return view;
     }
 
@@ -80,11 +80,11 @@ public class ChooseAreaFragment extends Fragment {
                 if(currentLevel == LEVEL_PROVINCE){
                     selectedProvince = provinceList.get(position);
                     //provinceList为返回列表中指定位置的元素对象,其实就是在对数据库进行操作
-                     Log.d(TAG, "点击的城市是"+selectedProvince.getProvinceName()+"线程ID为"+ Thread.currentThread().getName() );
+                    // Log.d(TAG, "点击的城市是"+selectedProvince.getProvinceName()+"线程ID为"+ Thread.currentThread().getName() );
                     queryCities();
                 }else  if(currentLevel == LEVEL_CITY){
                     selectedCity = cityList.get(position);
-                    Log.d(TAG, "点击的县是"+selectedCity.getCityName()+"线程ID为"+ Thread.currentThread().getName() );
+                   // Log.d(TAG, "点击的县是"+selectedCity.getCityName()+"线程ID为"+ Thread.currentThread().getName() );
                     queryCounties();
 
                 }else if (currentLevel ==LEVEL_COUNTY){
@@ -96,6 +96,7 @@ public class ChooseAreaFragment extends Fragment {
                         startActivity(intent);
                         getActivity().finish();
                     }else if (getActivity() instanceof WeatherActivity){
+                        //更换城市： 因为就是在WeatherActivity中 所以直接更新
                         //关闭滑动菜单，显示下拉刷新，更新天气
                         WeatherActivity activity =(WeatherActivity) getActivity();
                         activity.drawerLayout.closeDrawers();
@@ -120,9 +121,11 @@ public class ChooseAreaFragment extends Fragment {
 
     }
 
+
+
     //查询省级数据，优先查询数据库
     private void queryProvinces() {
-        Log.d(TAG, "查询省数据："+Thread.currentThread().getName());
+      //  Log.d(TAG, "查询省数据："+Thread.currentThread().getName());
         titleText.setText("中国 2018");
         backButton.setVisibility(View.GONE);//此级使按钮不可见
         provinceList = DataSupport.findAll(Province.class);//查询所有省数据
@@ -177,7 +180,7 @@ public class ChooseAreaFragment extends Fragment {
             int cityCode =selectedCity.getCityCode();
             String address = "http://guolin.tech/api/china/"+provinceCode+"/"+cityCode;
             queryFromServer(address, "county");
-            Log.d(TAG, "queryCounties:address "+address);
+          //  Log.d(TAG, "queryCounties:address "+address);
         }
     }
     //从服务器查询各级数据：
@@ -188,7 +191,7 @@ public class ChooseAreaFragment extends Fragment {
             @Override//自动转到了子线程处理
             public void onResponse(Call call, Response response) throws IOException {
                 String responseText = response.body().string();
-                Log.d(TAG, "从服务器查询数据  线程： "+Thread.currentThread().getName()+"\n数据为"+responseText);
+              //  Log.d(TAG, "从服务器查询数据  线程： "+Thread.currentThread().getName()+"\n数据为"+responseText);
                 boolean result =false;
                 if("province".equals(type)) {
                     result = Utility.handleProvinceResponse(responseText);//把数据解析并储存至数据库
@@ -202,7 +205,7 @@ public class ChooseAreaFragment extends Fragment {
                         @Override
                         public void run() {
                             closeProgressDialog();
-                            Log.d(TAG, "进度对话框处理   线程： "+Thread.currentThread().getName());
+                       //     Log.d(TAG, "进度对话框处理   线程： "+Thread.currentThread().getName());
                             if("province".equals(type)){
                                 queryProvinces();
                             }else if ("city".equals(type)){

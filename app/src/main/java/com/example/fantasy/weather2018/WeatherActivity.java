@@ -54,6 +54,8 @@ public class WeatherActivity extends AppCompatActivity {
     public DrawerLayout drawerLayout;
     private Button navButton;
 
+    private long firstTime;
+
 
 
 
@@ -164,7 +166,7 @@ public class WeatherActivity extends AppCompatActivity {
 
     //根据天气id请求天气信息
     public void requestWeather(final String id){
-        Log.d(TAG, "requestWeather: id is :"+id);
+       // Log.d(TAG, "requestWeather: id is :"+id);
         String Url ="http://guolin.tech/api/weather?cityid="+id+"&key=d21b01ecf8ee4e07ab849f6aa4ef414e";
         HttpUtil.sendOkHttpRequest(Url, new Callback() {
             @Override
@@ -186,7 +188,7 @@ public class WeatherActivity extends AppCompatActivity {
                 final String responseText = response.body().string();
 
                 final Weather weather =Utility.handleWeatherResponse(responseText);
-                Log.d(TAG, "onResponse: data:"+responseText+"\nweather is "+weather);
+               // Log.d(TAG, "onResponse: data:"+responseText+"\nweather is "+weather);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {//回主线程
@@ -214,6 +216,17 @@ public class WeatherActivity extends AppCompatActivity {
         });
         loadBingPic();
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        long secondTime = System.currentTimeMillis();
+        if (secondTime - firstTime > 2000) {
+            Toast.makeText(WeatherActivity.this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            firstTime = secondTime;
+        } else {
+            System.exit(0);
+        }
     }
 
     //天气显示界面
