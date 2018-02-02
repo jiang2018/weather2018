@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.example.fantasy.weather2018.db.City;
 import com.example.fantasy.weather2018.db.County;
 import com.example.fantasy.weather2018.db.Province;
+import com.example.fantasy.weather2018.gson.Weather;
 import com.example.fantasy.weather2018.util.HttpUtil;
 import com.example.fantasy.weather2018.util.Utility;
 
@@ -88,10 +89,20 @@ public class ChooseAreaFragment extends Fragment {
 
                 }else if (currentLevel ==LEVEL_COUNTY){
                     String weatherId =countyList.get(position).getWeatherId();
-                    Intent intent = new Intent(getActivity(),WeatherActivity.class);
-                    intent.putExtra("weather_id",weatherId);//把key传入
-                    startActivity(intent);
-                    getActivity().finish();
+                    if(getActivity() instanceof MainActivity) {
+                        //instanceof 可以判断一个对象是否属于某个类的实例
+                        Intent intent = new Intent(getActivity(), WeatherActivity.class);
+                        intent.putExtra("weather_id", weatherId);//把key传入
+                        startActivity(intent);
+                        getActivity().finish();
+                    }else if (getActivity() instanceof WeatherActivity){
+                        //关闭滑动菜单，显示下拉刷新，更新天气
+                        WeatherActivity activity =(WeatherActivity) getActivity();
+                        activity.drawerLayout.closeDrawers();
+                        activity.swipeRefresh.setRefreshing(true);
+                        activity.requestWeather(weatherId);
+
+                    }
                 }
             }
         });
