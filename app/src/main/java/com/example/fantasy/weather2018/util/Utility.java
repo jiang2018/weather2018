@@ -7,6 +7,8 @@ import android.widget.TextView;
 import com.example.fantasy.weather2018.db.City;
 import com.example.fantasy.weather2018.db.County;
 import com.example.fantasy.weather2018.db.Province;
+import com.example.fantasy.weather2018.gson.Weather;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,7 +31,38 @@ import org.json.JSONObject;
  *
  */
 
+
+
+
+
+
+
+
+
+
 public class Utility {
+
+    //将返回的数据解析成实体类
+    public static Weather handleWeatherResponse(String response){
+        try {
+            JSONObject jsonObject = new JSONObject(response);
+            JSONArray jsonArray = jsonObject.getJSONArray("HeWeather");
+            String weatherContent = jsonArray.getJSONObject(0).toString();
+
+            Log.d("测试","JSONObject处理后值weatherContent : "+weatherContent+"\n 对象值为");
+            //其实只是去掉了 {"HeWeather": [
+
+            return new Gson().fromJson(weatherContent,Weather.class);
+        } catch (Exception e){
+        e.printStackTrace();
+    }
+
+
+        return null;
+    }
+
+
+
     public static boolean handleProvinceResponse(String response){
         if(!TextUtils.isEmpty(response)){//字符串为null或者"" 返回true
             try {

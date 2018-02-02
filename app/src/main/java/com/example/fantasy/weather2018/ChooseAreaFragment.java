@@ -1,6 +1,7 @@
 package com.example.fantasy.weather2018;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -85,6 +86,12 @@ public class ChooseAreaFragment extends Fragment {
                     Log.d(TAG, "点击的县是"+selectedCity.getCityName()+"线程ID为"+ Thread.currentThread().getName() );
                     queryCounties();
 
+                }else if (currentLevel ==LEVEL_COUNTY){
+                    String weatherId =countyList.get(position).getWeatherId();
+                    Intent intent = new Intent(getActivity(),WeatherActivity.class);
+                    intent.putExtra("weather_id",weatherId);//把key传入
+                    startActivity(intent);
+                    getActivity().finish();
                 }
             }
         });

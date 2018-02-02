@@ -32,7 +32,7 @@ public class Basic {
     public Updare update;
 
 
-    private class Updare {
+    public class Updare {
         @SerializedName("loc")
         public String updateTime;
     }
